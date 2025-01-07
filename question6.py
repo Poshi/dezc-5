@@ -37,17 +37,14 @@ else:
 zones_df = spark.read.option("header", True).csv(taxi_zones)
 
 # Perform query
-df.createOrReplaceTempView("table")
-zones_df.createOrReplaceTempView("zones")
-
 spark.sql("""
         SELECT
             z.Zone
         FROM
-            table t JOIN zones z ON t.PULocationID = z.LocationID
+            {table} t JOIN {zones} z ON t.PULocationID = z.LocationID
         GROUP BY
             z.Zone
         ORDER BY
             COUNT(*)
         LIMIT 1
-        """).show()
+        """, table=df, zones=zones_df).show()

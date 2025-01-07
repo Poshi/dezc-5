@@ -34,13 +34,12 @@ else:
     df = spark.read.parquet(input_parquet)
 
 # Perform query
-df.createOrReplaceTempView("table")
 spark.sql("""
         SELECT
             (unix_timestamp(dropOff_datetime) - unix_timestamp(pickup_datetime)) / 3600 as travel_time
         FROM
-            table
+            {table}
         ORDER BY
             travel_time DESC
         LIMIT 1
-        """).show()
+        """, table=df).show()

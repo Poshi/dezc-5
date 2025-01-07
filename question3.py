@@ -34,13 +34,12 @@ else:
     df = spark.read.parquet(input_parquet)
 
 # Perform query
-df.createOrReplaceTempView("table")
 spark.sql("""
         SELECT
           COUNT(*)
         FROM
-            table
+            {table}
         WHERE
                 pickup_datetime >= '2019-10-15T00:00:00'
             AND pickup_datetime < '2019-10-16T00:00:00'
-        """).show()
+        """, table=df).show()
